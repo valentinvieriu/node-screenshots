@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb-base",
+    "plugins": [
+        "import"
+    ],
+    "rules": {
+        "no-param-reassign" : 0,
+        // allow debugger during development
+        "no-debugger": 0,
+        "no-console": 0
+    }
+}

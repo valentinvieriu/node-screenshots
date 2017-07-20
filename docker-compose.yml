@@ -1,31 +1,28 @@
 version: '2'
 services:
-  chrome-headless:
-    container_name: chrome-headless
-    image: alpeware/chrome-headless-trunk
-    # image: yukinying/chrome-headless
-    # image: valentinvieriu/chrome-headless
-    # image: justinribeiro/chrome-headless
+  node-screenshots:
+    container_name: node-screenshots
     build: .
-    privileged: true
+    # privileged: true
     restart: always
-    # mem_limit: 2G
-    # memswap_limit: 0
-    command: '--ignore-certificate-errors --no-sandbox --headless --disable-gpu --hide-scrollbars --window-size=1280,1280 --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222'
-    # command: '--headless --disable-gpu --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --security-opt seccomp=/chrome.json'
-    working_dir: /screenshots
+    working_dir: /app
     environment:
-      PORT: ${PORT}
+      FILES_CLEAN_TIMEOUT: ${FILES_CLEAN_TIMEOUT}
+      WATCH_QUEUE: ${WATCH_QUEUE}
       NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      REDIS_URL: ${REDIS_URL}
+      REMOTE_HOST: chrome-headless
+      REMOTE_PORT: 9222
     labels:
-        - "traefik.enable=false"
-    ports:
-      - '${PORT}:9222'
+      - "traefik.port=${PORT}"
+      - "traefik.frontend.rule=Host:node-screenshots.${TLD}"
+    # ports:
+    #   - '${PORT}:${PORT}'
     volumes: 
-      # - ./fetchImages.js:/usr/src/app/fetchImages.js
-      - ./screenshots:/screenshots
-      - ./chrome.json:/chrome.json
-# networks:
-#   default:
-#     external:
-#       name: mainframe_default
+      - ${ROOT_FOLDER}/screenshots:/app/screenshots
+
+networks:
+  default:
+    external:
+      name: ${DOCKER_NETWORK}

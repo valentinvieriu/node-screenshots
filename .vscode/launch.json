@@ -5,14 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch server.js via nodemon",
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--harmony"
+            ],
             "program": "${workspaceRoot}/app.js",
-            "protocol": "inspector",
+            "restart": true,
+            "console": "integratedTerminal",
             "env": {
-                "PORT": "3000",
-                "NODE_ENV": "dev"
+                "FILES_CLEAN_TIMEOUT": "0",
+                "NODE_ENV": "development",
+                "PORT":"3000",
+                "REDIS_URL": "redis://h:15b92993122b3e149d7aa8e432f96d72@redis.beer42.de:6379",
+                "WATCH_QUEUE":"1",
+                "REMOTE_HOST": "localhost"
             }
         }
     ]

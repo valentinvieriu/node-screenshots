@@ -1,5 +1,6 @@
 node_modules
 screenshots
-thumbnails
+chromedata
+build
 .vscode
 .git
