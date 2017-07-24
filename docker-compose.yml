@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   node-screenshots:
     container_name: node-screenshots
@@ -14,6 +14,11 @@ services:
       REDIS_URL: ${REDIS_URL}
       REMOTE_HOST: chrome-headless
       REMOTE_PORT: 9222
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/healthcheck"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
     labels:
       - "traefik.port=${PORT}"
       - "traefik.frontend.rule=Host:node-screenshots.${TLD}"

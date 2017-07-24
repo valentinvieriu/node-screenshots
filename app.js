@@ -17,10 +17,25 @@ const imageCache = 7 * 24 * 60 * 60;
 process.rootPath = __dirname;
 
 const requestHandler = async (request, response) => {
+  if (request.url.includes('/healthcheck')) {
+    tabsStatus().then(() => {
+      response.statusCode = 201;
+      response.end();
+    })
+    .catch(() => {
+      response.statusCode = 500;
+      response.end();
+    });
+    return;
+  }
+  if (!request.url.includes('/capture')) {
+    response.statusCode = 404;
+    response.end('Not Found');
+    return;
+  }
   const query = URL.parse(request.url, true).query;
   const format = query.format || 'jpeg';
   const isThumbRequest = query.thumb || false;
-
   const imgUrl = query.url;
   if (!imgUrl || imgUrl === '' || /\.pdf/.test(imgUrl)) {
     response.writeHead(200, {
@@ -84,9 +99,11 @@ server.listen(port, (err) => {
 });
 
 // we close all tabs and schedule the cleaning task
-cleanup().then(async (results) => {
-  console.log(`OPEN_TABS: ${results.length}`);
-  setInterval(tabsStatus, ms('30s'));
+cleanup().then(async () => {
+  setInterval(async () => {
+    const tabs = await tabsStatus();
+    console.log(`OPEN_TABS: ${tabs.length}`);
+  }, ms('30s'));
   const cleanDaysTimeout = Number(process.env.FILES_CLEAN_TIMEOUT);
   const watchQueue = Number(process.env.WATCH_QUEUE) || 0;
 
