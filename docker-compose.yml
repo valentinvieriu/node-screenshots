@@ -2,6 +2,7 @@ version: '3'
 services:
   node-screenshots:
     container_name: node-screenshots
+    image: ${REGISTRY_BASE_URL}/node-screenshots:1.0.2
     build: .
     # privileged: true
     restart: always

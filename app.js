@@ -8,7 +8,7 @@ const { exec } = require('child_process');
 const ms = require('ms');
 
 const { saveScreenshot, saveEmptyScreenshot } = require('./lib/save-resize.js');
-const { cleanup, tabsStatus } = require('./lib/remote-interface.js');
+const { cleanup, tabsStatus, concurentJobs } = require('./lib/remote-interface.js');
 
 const readFilePromise = util.promisify(fs.readFile);
 const port = process.env.PORT || 3000;
@@ -99,10 +99,26 @@ server.listen(port, (err) => {
 });
 
 // we close all tabs and schedule the cleaning task
+let openTabs = 0;
+let similarTabsCount = 1;
 cleanup().then(async () => {
   setInterval(async () => {
     const tabs = await tabsStatus();
-    console.log(`OPEN_TABS: ${tabs.length}`);
+    const currentOpenTabs = tabs.length;
+    console.log(`OPEN_TABS: ${currentOpenTabs}`);
+
+    if (currentOpenTabs > 1 && (currentOpenTabs === openTabs)) {
+      similarTabsCount += 1;
+    } else {
+      similarTabsCount = 1;
+    }
+    openTabs = currentOpenTabs;
+    if ((similarTabsCount > 5) || openTabs > (concurentJobs * 2)) {
+      console.log('Too many open tabs!!');
+      await cleanup();
+      openTabs = 0;
+      similarTabsCount = 1;
+    }
   }, ms('30s'));
   const cleanDaysTimeout = Number(process.env.FILES_CLEAN_TIMEOUT);
   const watchQueue = Number(process.env.WATCH_QUEUE) || 0;
@@ -126,6 +142,6 @@ cleanup().then(async () => {
     que.init();
     setInterval(() => {
       que.clearFailed(saveEmptyScreenshot);
-    }, ms('3d'));
+    }, ms('1m'));
   }
 });

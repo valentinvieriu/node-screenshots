@@ -1,7 +1,8 @@
-FROM node:8
+FROM node:8.4.0
 WORKDIR /app
 
 #we want to cache the the npm install
+COPY package.json .
 COPY package-lock.json .
 # Install app dependencies
 RUN npm install
