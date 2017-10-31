@@ -2,7 +2,7 @@ version: '3'
 services:
   node-screenshots:
     container_name: node-screenshots
-    image: valentinvieriu/node-screenshots:1.0.2
+    image: valentinvieriu/node-screenshots:1.0.3
     build: .
     # privileged: true
     restart: always

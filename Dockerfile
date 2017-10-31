@@ -1,4 +1,4 @@
-FROM node:8.4.0
+FROM node:8.8.1
 WORKDIR /app
 
 #we want to cache the the npm install
