@@ -120,7 +120,7 @@ cleanup().then(async () => {
       similarTabsCount = 1;
     }
   }, ms('30s'));
-  const cleanDaysTimeout = Number(process.env.FILES_CLEAN_TIMEOUT);
+  const cleanDaysTimeout = Number(process.env.FILES_CLEAN_TIMEOUT) || 1;
   const watchQueue = Number(process.env.WATCH_QUEUE) || 0;
 
   // Cleaning up the old images every 10 days
