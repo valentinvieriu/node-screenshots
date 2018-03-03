@@ -1,12 +1,15 @@
 {
-    "extends": "airbnb-base",
-    "plugins": [
-        "import"
-    ],
-    "rules": {
-        "no-param-reassign" : 0,
-        // allow debugger during development
-        "no-debugger": 0,
-        "no-console": 0
-    }
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["import", "prettier"],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "no-param-reassign": 0,
+    "no-debugger": 0,
+    "no-console": 0
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  }
 }

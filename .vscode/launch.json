@@ -1,28 +1,25 @@
 {
-    // Use IntelliSense to learn about possible Node.js debug attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Launch server.js via nodemon",
-            "type": "node",
-            "request": "launch",
-            "runtimeExecutable": "nodemon",
-            "runtimeArgs": [
-                "--harmony"
-            ],
-            "program": "${workspaceRoot}/app.js",
-            "restart": true,
-            "console": "integratedTerminal",
-            "env": {
-                "FILES_CLEAN_TIMEOUT": "0",
-                "NODE_ENV": "development",
-                "PORT":"3000",
-                "REDIS_URL": "redis://h:15b92993122b3e149d7aa8e432f96d72@redis.beer42.de:6379",
-                "WATCH_QUEUE":"1",
-                "REMOTE_HOST": "localhost"
-            }
-        }
-    ]
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch server.js via nodemon",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "nodemon",
+      "runtimeArgs": ["--harmony"],
+      "program": "${workspaceRoot}/app.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "env": {
+        "FILES_CLEAN_TIMEOUT": "0",
+        "NODE_ENV": "development",
+        "PORT": "3000",
+        "REDIS_URL": "redis://redis:6379",
+        "WATCH_QUEUE": "2"
+      }
+    }
+  ]
 }

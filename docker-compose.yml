@@ -1,14 +1,21 @@
-version: '3'
+version: '2.3'
 services:
   node-screenshots:
     container_name: node-screenshots
-    image: valentinvieriu/node-screenshots:1.0.5
+    image: valentinvieriu/node-screenshots:1.1.0
     build: .
     # privileged: true
     restart: 'unless-stopped'
+    cap_add: 
+      - 'SYS_ADMIN'
+    # user: pptruser
+    shm_size: 2G
+    restart: always
+    mem_limit: 1G
+    memswap_limit: 2G
     environment:
       FILES_CLEAN_TIMEOUT: ${FILES_CLEAN_TIMEOUT}
-      WATCH_QUEUE: ${WATCH_QUEUE}
+      # WATCH_QUEUE: ${WATCH_QUEUE}
       NODE_ENV: ${NODE_ENV}
       PORT: ${PORT}
       REDIS_URL: ${REDIS_URL}
@@ -22,10 +29,10 @@ services:
     labels:
       - "traefik.port=${PORT}"
       - "traefik.frontend.rule=Host:node-screenshots.${TLD}"
-    # ports:
-    #   - '${PORT}:${PORT}'
+    ports:
+      - '${PORT}:${PORT}'
     volumes: 
-      - ${ROOT_FOLDER}/screenshots:/app/screenshots
+      - ${ROOT_FOLDER}/screenshots:/usr/src/app/screenshots
 
 networks:
   default:
