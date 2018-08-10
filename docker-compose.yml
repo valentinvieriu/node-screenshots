@@ -2,7 +2,7 @@ version: '2.3'
 services:
   node-screenshots:
     container_name: node-screenshots
-    image: valentinvieriu/node-screenshots:1.1.0
+    image: valentinvieriu/node-screenshots:1.2.0
     build: .
     # privileged: true
     restart: 'unless-stopped'
@@ -14,13 +14,13 @@ services:
     mem_limit: 1G
     memswap_limit: 2G
     environment:
-      FILES_CLEAN_TIMEOUT: ${FILES_CLEAN_TIMEOUT}
-      # WATCH_QUEUE: ${WATCH_QUEUE}
+      FILES_CLEAN_TIMEOUT: '${FILES_CLEAN_TIMEOUT}'
+      WATCH_QUEUE: ${WATCH_QUEUE}
+      WAIT_UNTIL: 'networkidle0'
       NODE_ENV: ${NODE_ENV}
-      PORT: ${PORT}
       REDIS_URL: ${REDIS_URL}
-      REMOTE_HOST: chrome-headless
-      REMOTE_PORT: 9222
+      PORT: ${PORT}
+      CHROME_PATH: "${CHROME_PATH}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}/healthcheck"]
       interval: 1m
@@ -31,10 +31,6 @@ services:
       - "traefik.frontend.rule=Host:node-screenshots.${TLD}"
     ports:
       - '${PORT}:${PORT}'
+      - '9222:9222'
     volumes: 
       - ${ROOT_FOLDER}/screenshots:/usr/src/app/screenshots
-
-networks:
-  default:
-    external:
-      name: ${DOCKER_NETWORK}

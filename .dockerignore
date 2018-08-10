@@ -4,3 +4,4 @@ chromedata
 build
 .vscode
 .git
+.env*

@@ -2,19 +2,21 @@ const http = require('http');
 const fs = require('fs');
 const util = require('util');
 const URL = require('url');
-const { generateFilename } = require('./lib/helpers');
+const { generateFilename, deleteFiles } = require('./lib/helpers');
 const { exec } = require('child_process');
 const ms = require('ms');
 const que = require('./lib/queue');
 
 const { saveScreenshot, saveEmptyScreenshot } = require('./lib/save-resize.js');
 // const { cleanup, tabsStatus, concurentJobs } = require('./lib/remote-interface.js');
-
+const cleanDaysTimeout = Number(process.env.FILES_CLEAN_TIMEOUT);
+const watchQueue = Number(process.env.WATCH_QUEUE) || 0;
 const readFilePromise = util.promisify(fs.readFile);
 const port = process.env.PORT || 3000;
 const emptyFile = fs.readFileSync(`${__dirname}/empty.png`);
 const imageCache = 7 * 24 * 60 * 60;
 process.rootPath = __dirname;
+process.emptyFile = emptyFile;
 
 const requestHandler = async (request, response) => {
   if (request.url.includes('/healthcheck')) {
@@ -74,6 +76,7 @@ const requestHandler = async (request, response) => {
           });
           response.write(file, 'binary');
           response.end();
+          // if (cleanDaysTimeout === 0) deleteFiles(generateFilename(query));
         })
         .catch(async error => {
           console.error(error);
@@ -96,9 +99,6 @@ server.listen(port, err => {
   console.log(`Server is listening on ${port}`);
 });
 
-const cleanDaysTimeout = Number(process.env.FILES_CLEAN_TIMEOUT) || 1;
-const watchQueue = Number(process.env.WATCH_QUEUE) || 0;
-
 // Cleaning up the old images every 10 days
 if (cleanDaysTimeout) {
   setInterval(() => {
@@ -116,7 +116,7 @@ if (cleanDaysTimeout) {
 }
 
 // we watch the que and save the files
-if (watchQueue) {
+if (process.env.REDIS_URL && watchQueue) {
   // que.flushDB();
   que.init();
   setInterval(() => {
