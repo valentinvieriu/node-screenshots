@@ -1,4 +1,4 @@
-FROM node:9.8.0
+FROM node:10
 
 # See https://crbug.com/795759
 # RUN apt-get update && apt-get install -yq libgconf-2-4
